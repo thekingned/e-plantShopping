@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
+import { addItem } from './CartSlice';
 function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
+    const [addedToCart, setAddedToCart] = useState({}); // State to keep track of added items
 
     const plantsArray = [
         {
@@ -231,6 +233,11 @@ function ProductList({ onHomeClick }) {
         color: 'white',
         fontSize: '30px',
         textDecoration: 'none',
+        fontWeight: 'bold',
+        margin: '0 100px',
+        transition: 'color 0.3s ease',
+        alignItems: 'center',
+        display: 'flex',
     }
 
     const handleHomeClick = (e) => {
@@ -252,6 +259,20 @@ function ProductList({ onHomeClick }) {
         e.preventDefault();
         setShowCart(false);
     };
+
+    const handleAddToCart = (plant) => {
+        dispatch(addItem(plant)); // Dispatch the addItem action to add the plant to the cart
+        // Update the addedToCart state to keep track of added items
+        setAddedToCart((prev) => {
+            const updatedCart = { ...prev };
+            if (updatedCart[plant.name]) {
+                updatedCart[plant.name].quantity += 1; // Increment quantity if already in cart
+            } else {
+                updatedCart[plant.name] = { ...plant, quantity: 1 }; // Add new item with quantity 1
+            }
+            return updatedCart;
+        });
+    }
     return (
         <div>
             <div className="navbar" style={styleObj}>
@@ -260,8 +281,8 @@ function ProductList({ onHomeClick }) {
                         <img src="https://cdn.pixabay.com/photo/2020/08/05/13/12/eco-5465432_1280.png" alt="" />
                         <a href="/" onClick={(e) => handleHomeClick(e)}>
                             <div>
-                                <h3 style={{ color: 'white' }}>Paradise Nursery</h3>
-                                <i style={{ color: 'white' }}>Where Green Meets Serenity</i>
+                                <h3 style={{ color: 'white', fontSize: '17px' }}> Paradise Nursery</h3>
+                                <i style={{ color: 'white', fontSize: '12px' }}> Where Green Meets Serenity</i>
                             </div>
                         </a>
                     </div>
@@ -274,7 +295,45 @@ function ProductList({ onHomeClick }) {
             </div>
             {!showCart ? (
                 <div className="product-grid">
-
+                    {plantsArray.map((category, index) => (
+                        <div key= {index}>
+                            <h1>
+                                <div style={{ textAlign: 'center'}}>
+                                    <div style ={{
+                                        display: 'inline-block', 
+                                        width: '600px',
+                                        fontSize: '25px',
+                                        justifyContent: 'center', 
+                                        textAlign: 'center', 
+                                        color: 'lightgreen', 
+                                        backgroundColor: 'slategray', 
+                                        margin: '20px auto',
+                                        padding: '5px 20px', 
+                                        borderRadius: '10px', 
+                                        boxShadow: '3px 3px 8px rgba(0, 0, 0, 0.3)' 
+                                        }}>
+                                            {category.category}
+                                    </div>
+                                </div>
+                            </h1>
+                            <div className='product-list'>
+                                {category.plants.map((plant, plantIndex) => (
+                                    <div className="product-card" key={plantIndex}>
+                                        <img className="product-image" src={plant.image} alt={plant.name} />
+                                        <div className='product-title'>{plant.name}</div>
+                                        <div className='product-divider'></div>
+                                        {/* Display other plant details like description and cost*/}
+                                        <div className='product-description'>{plant.description}</div>
+                                        <div className='product-cost'>{plant.cost}</div>
+                                        <button className='product-button' onClick={() => handleAddToCart(plant)}>
+                                            Add to Cart
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                   
 
                 </div>
             ) : (
