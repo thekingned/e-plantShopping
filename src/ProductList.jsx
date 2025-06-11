@@ -323,7 +323,7 @@ function ProductList({ onHomeClick }) {
                                         padding: '5px 20px', 
                                         borderRadius: '10px', 
                                         boxShadow: '3px 3px 8px rgba(0, 0, 0, 0.3)' 
-                                        }}>""
+                                        }}>
                                             {category.category}
                                     </div>
                                 </div>
