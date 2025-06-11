@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
-import ProductList from './ProductList'; // Import the setAddedtoCart function if needed
+
 
 const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
@@ -32,6 +32,7 @@ const CartItem = ({ onContinueShopping }) => {
     e.preventDefault();
     // Implement checkout logic here, such as navigating to a checkout page or processing the order
     console.log("Proceeding to checkout with items:", cart);    
+    alert("Proceeding to checkout with items: " + JSON.stringify(cart));
     // You might want to clear the cart after checkout
     // dispatch(clearCart()); // Assuming you have a clearCart action to reset the cart
   };
@@ -80,12 +81,20 @@ const CartItem = ({ onContinueShopping }) => {
 
   return (
     <div>
-      <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount(cart)}</h2>
-      <h2 style={{ color: 'black' }}>Number of Items in the Cart: {calculateTotalQuantity(cart)}</h2>
-      <h2 style={{ color: 'black' }}>Cart Items:</h2>
-      <div className="cart-items-container">
+      <div className="cart-container">
         {cart.length === 0 && <p style={{ color: 'black' }}>Your cart is empty.</p>}  
       <div>
+        <section className="cart-summary">
+          <h2>
+            <span style={{ fontWeight: 'lighter' , textAlign: 'left'}}>Total Cart Amount:</span>{' '}
+            <span style={{ fontWeight: 'bold' , textAlign: 'right', fontSize: '18px'}}>${calculateTotalAmount(cart)}</span>
+          </h2>
+          <h2>
+            <span style={{ fontWeight: 'lighter' , textAlign: 'left'}}>Number of Items:</span>{' '}
+            <span style={{ fontWeight: 'bold' , textAlign: 'right', fontSize: '18px'}}>{calculateTotalQuantity(cart)}</span>
+          </h2>
+        </section>
+        <h2 style={{ color: '#072f0b', padding: '30px 10px' , textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)' }}>Shopping Cart</h2>
         {cart.map(item => (
           <div className="cart-item" key={item.name}>
             <img className="cart-item-image" src={item.image} alt={item.name} />
@@ -97,17 +106,20 @@ const CartItem = ({ onContinueShopping }) => {
                 <span className="cart-item-quantity-value">{item.quantity}</span>
                 <button className="cart-item-button cart-item-button-inc" onClick={() => handleIncrement(item)}>+</button>
               </div>
-              <div className="cart-item-total">Total: ${calculateTotalCost(item)}</div>
+              <div className="cart-item-total">
+                <span style={{ fontWeight: 'lighter' , textAlign: 'left'}}>Subtotal({item.quantity}):</span>{' '}
+                <span style={{ fontWeight: 'bold' , textAlign: 'right', fontSize: '18px'}}>${calculateTotalCost(item)}</span>
+              </div>
               <button className="cart-item-delete" onClick={() => handleRemove(item)}>Delete</button>
             </div>
           </div>
         ))}
-      </div>
-      <div style={{ marginTop: '20px', color: 'black' }} className='total_cart_amount'></div>
-      <div className="continue_shopping_btn">
-        <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
-        <br />
-        <button className="get-started-button1">Checkout</button>
+        <div>
+          <button className="get-started-button1" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
+        </div>
+        <div>
+          <button className="checkout-btn" onClick={(e) => handleCheckout(e)}>Checkout</button>
+        </div>
       </div>
     </div>
   </div>
