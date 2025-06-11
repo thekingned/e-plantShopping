@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+
 export const CartSlice = createSlice({
   name: 'cart',
   initialState: {
@@ -29,6 +30,7 @@ export const CartSlice = createSlice({
       //   existingItem.quantity = 0;
       // }
     },
+
     updateQuantity: (state, action) => {
       const { name, quantity } = action.payload;
       // Find the item in the cart
@@ -41,7 +43,6 @@ export const CartSlice = createSlice({
         console.warn(`Item with id ${name} not found in cart.`);
       }
 
-    
     },
   },
 });
